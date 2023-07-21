@@ -124,8 +124,7 @@ namespace ObjectsManagementAPP.Controllers
         public async Task<IActionResult> Edit(IFormCollection collection)    //int id, [Bind("Id,Name,Description,Type,ObjectMainId")] ObjectRelationship objectRelationship
         {
             try
-            {
-                var objectMain = await _objectService.GetAllObjects();
+            {                
                 if (ModelState.IsValid)
                 {
                     try
@@ -138,7 +137,7 @@ namespace ObjectsManagementAPP.Controllers
                             Type = collection["Type"],
                             ObjectMainId = int.Parse(collection["ObjectMainId"])
                         };
-
+                       
                         var objectRelationship = _mapper.Map<ObjectRelationshipEntity>(objectRelationshipModel);
                         _objectService.ObjectRelationshipUpdate(objectRelationship);
                         await _objectService.SaveChangesAsync();
@@ -156,7 +155,8 @@ namespace ObjectsManagementAPP.Controllers
                     }
                     return RedirectToAction("Edit", "ObjectMains", new { id = int.Parse(collection["ObjectMain.Id"]) });
                 }
-                ViewData["ObjectMainId"] = new SelectList(objectMain, "Id", "Description", collection["ObjectMainId"]);
+                var objectMainList = await _objectService.GetAllObjects();
+                ViewData["ObjectMainId"] = new SelectList(objectMainList, "Id", "Description", collection["ObjectMainId"]);
                 return View(new ObjectRelationshipEntity());
             }
             catch (Exception ex)

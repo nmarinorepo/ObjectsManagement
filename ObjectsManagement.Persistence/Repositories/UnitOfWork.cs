@@ -32,7 +32,7 @@ namespace ObjectsManagement.Persistence.Repositories
 
         public Task Save()
         {
-            return _context.SaveChangesAsync();
+            return _context.SaveChangesAsync(true);
         }
     }
 }
